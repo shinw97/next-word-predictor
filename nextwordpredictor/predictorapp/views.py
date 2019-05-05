@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render_to_response
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 # Create your views here.
@@ -27,3 +27,6 @@ def predict(request):
 			predicted_words = model.generate_seq(50, pretext, 1)
 			return Response({"predicted_words": predicted_words})
 	return Response({"text": "<TEXT HERE>"})
+
+def index(request):
+	return render_to_response('index.html')

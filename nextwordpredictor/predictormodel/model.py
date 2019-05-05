@@ -33,14 +33,3 @@ class NextWordModel(object):
 				if w[1] == word[0]:
 					predicted_words.append({'word': w[0], 'probability': word[1]})
 		return predicted_words
-			# for _ in range(3):
-			# 	predicted_words.append()
-			# out_word = ''
-			# for word, index in self.tokenizer.word_index.items():
-			# 	if index == yhat:
-			# 		out_word = word
-			# 		break
-			# # append to input
-			# in_text += ' ' + out_word
-			# result.append(out_word)
-		# return ' '.join(result)

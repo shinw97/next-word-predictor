@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Next Word Predictor</title>
+	<style>
+		body{
+			background-color: #E0E0E0;
+		}
+		header{
+			padding: 10px;
+			margin: 10px;
+			font-family: "Trebuchet MS", Helvetica, sans-serif;
+			text-align: center;
+			background-color: #808080;
+			color: white;
+		}
+
+		footer{
+			background-color: #808080;
+			color: #E0E0E0;
+			text-align: center;
+		}
+
+		.credit{
+			align-self: left;
+			color: #C0C0C0;
+		}
+
+		input{
+		    padding: 10px;
+		    margin: 10px;
+		    margin-bottom: 0px;
+		    height: 20px;
+		    width: 500px;
+		    border:1px solid #eaeaea;
+		    outline:none;
+		}
+
+		input:hover{
+	    	border-color: #a0a0a0 #b9b9b9 #b9b9b9 #b9b9b9;
+		}
+
+		input:focus{
+		    border-color:#4d90fe;
+		}
+
+		input[type="submit"] {
+		    border-radius: 2px;
+		    background: #f2f2f2;
+		    border: 1px solid #f2f2f2;
+		    color: #757575;
+		    cursor: default;
+		    font-size: 14px;
+		    font-weight: bold;
+		    width: 100px;
+		    padding: 0 16px;
+		    height:36px;
+		}
+
+		input[type="submit"]:hover {
+		    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+		    background: #f8f8f8;
+		    border: 1px solid #c6c6c6;
+		    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+		    color: #222;
+		}
+
+		.dropdown{
+			border: 1px solid #c6c6c6;
+		    margin: 10px;
+		    margin-top: 0px;
+		    width: 520px;
+		    background-color: white;
+		}
+
+		.dropdown-content{
+			color: black;
+			padding: 12px 16px;
+			text-decoration: none;
+			display: block;
+			text-align: left;
+			/*margin-left: 10px;*/
+		}
+
+		.dropdown-content:hover {
+			background-color: #ddd;
+			cursor: pointer;
+		}
+
+	</style>
+</head>
+<body>
+	<header>
+		<h1>Next Word Predictor</h1>
+			<div>
+				<h5 class = "credit">Prepared by: <br>
+				Yee Xun Wei WIE160041 <br>
+				Lim Shin Wei WID160015 <br>
+				Tan Lay Yan WIF160058 <br>
+				Wilson Tan Wei Hian WIF160064
+				</h5>
+			</div>
+	</header>
+
+	<main style="text-align: center;">
+		<div style="display: inline-block;">
+			<input type="text" id="textInput" name="textInput" placeholder="Type your text here..." onkeyup="callSearchAPI()"> 
+	       	<div class = "dropdown" id="dropdown">
+	       		<!-- <option class="dropdown-content" value=0 onclick="appendWords(value)">A</option>
+	       		<option class="dropdown-content" value=1 onclick="appendWords(value)">B</option>
+	       		<option class="dropdown-content" value=2 onclick="appendWords(value)">C</option> -->
+			</div>
+		</div>
+	</main>
+</body>
+
+	<script type="text/javascript">
+		function callSearchAPI(){
+			var textInTextField = document.getElementById('textInput').value;
+			console.log(textInTextField);
+			//call API with textInTextField
+			var url = 'http://127.0.0.1:8000/prediction/';
+			var data = {text: textInTextField};
+
+			fetch(url, {
+			  method: 'POST', // or 'PUT'
+			  body: JSON.stringify(data), // data can be `string` or {object}!
+			  headers:{
+			    'Content-Type': 'application/json'
+			  }
+			}).then(res => res.json())
+			.then(response => {
+				console.log('Success:', JSON.stringify(response))
+				var nextWordList = [response['predicted_words'][0]['word'], response['predicted_words'][1]['word'],response['predicted_words'][2]['word']]; // replace with the word return from API
+				listSuggestion(nextWordList);
+			})
+			
+			
+		}
+
+		function appendWords(selectValue) {
+			console.log(selectValue);
+			var selectWordArray = document.getElementsByClassName('dropdown-content');
+			// console.log(selectWordArray[selectValue]);
+			document.getElementById('textInput').value += selectWordArray[selectValue].text;
+		}
+
+		function listSuggestion(nextWordList){
+			document.getElementById('dropdown').innerHTML = "<option class=\"dropdown-content\" value=0 onclick=\"appendWords(value)\"></option><option class=\"dropdown-content\" value=1 onclick=\"appendWords(value)\"></option><option class=\"dropdown-content\" value=2 onclick=\"appendWords(value)\"></option>";
+			for (var i = 0; i < nextWordList.length ; i++) {
+				document.getElementsByClassName('dropdown-content')[i].text = nextWordList[i];
+			}
+		}
+	</script>
+
+	<footer>
+		<br><h4>WIX 3001 Soft Computing Next Word Predictor</h4><br>
+	</footer>
+</html>

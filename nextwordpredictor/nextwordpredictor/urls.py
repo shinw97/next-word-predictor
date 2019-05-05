@@ -19,5 +19,6 @@ from django.urls import path
 from predictorapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('prediction/', views.predict)
+    path('prediction/', views.predict),
+    path('index/', views.index)
 ]
