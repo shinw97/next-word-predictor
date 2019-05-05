@@ -16,20 +16,31 @@ class NextWordModel(object):
 		result = list()
 		in_text = seed_text
 		# generate a fixed number of words
-		for _ in range(n_words):
-			# encode the text as integer
-			encoded = self.tokenizer.texts_to_sequences([in_text])[0]
-			# truncate sequences to a fixed length
-			encoded = pad_sequences([encoded], maxlen=seq_length, truncating='pre')
-			# predict probabilities for each word
-			yhat = self.model.predict_classes(encoded, verbose=0)
-			# map predicted word index to word
-			out_word = ''
-			for word, index in self.tokenizer.word_index.items():
-				if index == yhat:
-					out_word = word
-					break
-			# append to input
-			in_text += ' ' + out_word
-			result.append(out_word)
-		return ' '.join(result)
+			# for _ in range(n_words):
+		# encode the text as integer
+		encoded = self.tokenizer.texts_to_sequences([in_text])[0]
+		# truncate sequences to a fixed length
+		encoded = pad_sequences([encoded], maxlen=seq_length, truncating='pre')
+		# predict probabilities for each word
+		# yhat = self.model.predict_classes(encoded, verbose=0)
+		predicted_l = list(tuple(enumerate(self.model.predict(encoded)[0])))
+		top_3 = sorted(predicted_l, key=lambda x: x[1], reverse=True)[:3]
+		print(top_3)
+		# map predicted word index to word
+		predicted_words = []
+		for i, word in enumerate(top_3):
+			for w in list(self.tokenizer.word_index.items()):
+				if w[1] == word[0]:
+					predicted_words.append({'word': w[0], 'probability': word[1]})
+		return predicted_words
+			# for _ in range(3):
+			# 	predicted_words.append()
+			# out_word = ''
+			# for word, index in self.tokenizer.word_index.items():
+			# 	if index == yhat:
+			# 		out_word = word
+			# 		break
+			# # append to input
+			# in_text += ' ' + out_word
+			# result.append(out_word)
+		# return ' '.join(result)

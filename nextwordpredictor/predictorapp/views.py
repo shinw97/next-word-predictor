@@ -24,6 +24,6 @@ model.load_model_and_tokenizer(tokenizer, MODEL_PATH)
 def predict(request):
 	if request.method == 'POST':
 			pretext = request.data['text']
-			predicted_word = model.generate_seq(50, pretext, 1)
-			return Response({"predicted_word": predicted_word})
+			predicted_words = model.generate_seq(50, pretext, 1)
+			return Response({"predicted_words": predicted_words})
 	return Response({"text": "<TEXT HERE>"})
