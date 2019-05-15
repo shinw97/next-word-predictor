@@ -4,26 +4,30 @@
 	<title>Next Word Predictor</title>
 	<style>
 		body{
-			background-color: #E0E0E0;
+			background-color: #c5e1a5;
 		}
 		header{
 			padding: 10px;
-			margin: 10px;
+			/*margin: 10px;*/
 			font-family: "Trebuchet MS", Helvetica, sans-serif;
 			text-align: center;
-			background-color: #808080;
+			background-color: #94af76;
 			color: white;
 		}
 
 		footer{
-			background-color: #808080;
-			color: #E0E0E0;
+			background-color: #94af76;
+			color: #f7ffd6;
 			text-align: center;
+			position: fixed;
+  			width: 100%;
+  			right: 0;
+  			bottom: 0;
 		}
 
 		.credit{
 			align-self: left;
-			color: #C0C0C0;
+			color: #f7ffd6;
 		}
 
 		input{
@@ -104,7 +108,8 @@
 
 	<main style="text-align: center;">
 		<div style="display: inline-block;">
-			<input type="text" id="textInput" name="textInput" placeholder="Type your text here..." onkeyup="callSearchAPI()"> 
+			<input type="text" id="textInput" name="textInput" placeholder="Type your text here..."> 
+			<!-- onkeyup="callSearchAPI()" -->
 	       	<div class = "dropdown" id="dropdown">
 	       		<!-- <option class="dropdown-content" value=0 onclick="appendWords(value)">A</option>
 	       		<option class="dropdown-content" value=1 onclick="appendWords(value)">B</option>
@@ -113,28 +118,82 @@
 		</div>
 	</main>
 </body>
-
+	
 	<script type="text/javascript">
+		
+		var pressedValue = -1;
+		var textInTextField = document.getElementById('textInput');
+		var dropdownContentList;
+		textInTextField.addEventListener("keyup", function(event) {
+			if(event.key != "ArrowDown" && event.key !='ArrowUp' && event.key != "Enter") {
+				callSearchAPI();
+			}
+
+	    	if (event.key === "Enter") {
+	    		if(pressedValue == -1) return;
+	        	console.log('Event enter key:?', event.key);
+	        	appendWords(pressedValue);
+	    	}
+	    	else if (event.key === "ArrowDown"){
+	    		var removedColorIndex = pressedValue; 
+	    		pressedValue++;
+	    		if (pressedValue > 2) {
+	    			pressedValue = 0;
+	    		}
+	    		if(pressedValue >= 0 && removedColorIndex >=0){
+	    			dropdownContentList[removedColorIndex].style.backgroundColor = 'white';
+	    		}
+	    		if(pressedValue != -1){
+	    			dropdownContentList[pressedValue].style.backgroundColor = '#ddd';
+	    		}
+	    		
+	    		console.log('Event key:', event.key, event);
+	    	}else if(event.key ==='ArrowUp'){
+	    		var removedColorIndex = pressedValue; 
+	    		pressedValue--;
+	    		if (pressedValue < 0) {
+	    			pressedValue = 2;
+	    		}
+	    	}
+	    	if(pressedValue >= 0 && removedColorIndex >=0){
+	    		dropdownContentList[removedColorIndex].style.backgroundColor = 'white';
+	    	}
+	    	if(pressedValue != -1){
+	    		dropdownContentList[pressedValue].style.backgroundColor = '#ddd';
+	    	}
+	    	
+	    	console.log('KeyboardSelectedValue:', pressedValue);
+		});
+
+		function changeOptionBackgroundColor(){
+			var dropdownContentList = document.getElementsByClassName('dropdown-content');
+			
+		}
+
 		function callSearchAPI(){
 			var textInTextField = document.getElementById('textInput').value;
 			console.log(textInTextField);
-			//call API with textInTextField
-			var url = 'http://127.0.0.1:8000/prediction/';
-			var data = {text: textInTextField};
 
-			fetch(url, {
-			  method: 'POST', // or 'PUT'
-			  body: JSON.stringify(data), // data can be `string` or {object}!
-			  headers:{
-			    'Content-Type': 'application/json'
-			  }
-			}).then(res => res.json())
-			.then(response => {
-				console.log('Success:', JSON.stringify(response))
-				var nextWordList = [response['predicted_words'][0]['word'], response['predicted_words'][1]['word'],response['predicted_words'][2]['word']]; // replace with the word return from API
-				listSuggestion(nextWordList);
-			})
-			
+			if(textInTextField == ''){
+				document.getElementById('dropdown').innerHTML = "";
+			}else{
+				//call API with textInTextField
+				var url = 'http://127.0.0.1:8000/prediction/';
+				var data = {text: textInTextField};
+
+				fetch(url, {
+				  method: 'POST', // or 'PUT'
+				  body: JSON.stringify(data), // data can be `string` or {object}!
+				  headers:{
+				    'Content-Type': 'application/json'
+				  }
+				}).then(res => res.json())
+				.then(response => {
+					console.log('Success:', JSON.stringify(response))
+					var nextWordList = [response['predicted_words'][0]['word'], response['predicted_words'][1]['word'],response['predicted_words'][2]['word']]; // replace with the word return from API
+					listSuggestion(nextWordList);
+				})
+			}
 			
 		}
 
@@ -142,15 +201,21 @@
 			console.log(selectValue);
 			var selectWordArray = document.getElementsByClassName('dropdown-content');
 			// console.log(selectWordArray[selectValue]);
-			document.getElementById('textInput').value += selectWordArray[selectValue].text;
+			document.getElementById('textInput').value += ' '+ selectWordArray[selectValue].text;
+			callSearchAPI();
 		}
+
 
 		function listSuggestion(nextWordList){
 			document.getElementById('dropdown').innerHTML = "<option class=\"dropdown-content\" value=0 onclick=\"appendWords(value)\"></option><option class=\"dropdown-content\" value=1 onclick=\"appendWords(value)\"></option><option class=\"dropdown-content\" value=2 onclick=\"appendWords(value)\"></option>";
 			for (var i = 0; i < nextWordList.length ; i++) {
 				document.getElementsByClassName('dropdown-content')[i].text = nextWordList[i];
 			}
+			//added
+			dropdownContentList = document.getElementsByClassName('dropdown-content');
+			pressedValue = -1
 		}
+
 	</script>
 
 	<footer>
