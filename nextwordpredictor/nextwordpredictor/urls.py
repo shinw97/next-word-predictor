@@ -20,5 +20,6 @@ from predictorapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('prediction/', views.predict),
+    path('changemode/', views.change_mode),
     path('index/', views.index)
 ]

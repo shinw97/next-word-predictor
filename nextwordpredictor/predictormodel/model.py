@@ -11,6 +11,7 @@ class NextWordModel(object):
 		print('Loading model...')
 		self.model = load_model(model_path)
 		self.model._make_predict_function()
+		print('Model Loaded!')
 
 	def generate_seq(self, seq_length, seed_text, n_words):
 		result = list()
@@ -18,6 +19,7 @@ class NextWordModel(object):
 		# generate a fixed number of words
 			# for _ in range(n_words):
 		# encode the text as integer
+		print(seed_text)
 		encoded = self.tokenizer.texts_to_sequences([in_text])[0]
 		# truncate sequences to a fixed length
 		encoded = pad_sequences([encoded], maxlen=seq_length, truncating='pre')
