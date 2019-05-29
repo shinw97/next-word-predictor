@@ -2,7 +2,7 @@
 This project is developed using Python Django as backend and JavaScript/HTML as Frontend.
 
 ## Models Download Link
-Download models here: https://drive.google.com/open?id=1bPYPov1aBljFPjssvBzv3nt0-l0yRaiR
+Download models here: https://drive.google.com/file/d/1qw16zjotkwaY3Snqods8ozjP95hEiJSn/view?usp=sharing
 and extract the models to directory /nextwordpredictor/predictormodel/models/
 
 ## Start Server
