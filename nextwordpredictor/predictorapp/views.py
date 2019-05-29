@@ -13,14 +13,14 @@ print(BASE_DIR)
 MODEL_PATH = BASE_DIR + '/predictormodel/256-100.h5'
 TOKENIZER_PATH = BASE_DIR + '/predictormodel/tokenizer.pkl'
 
-ENGLISH_MODEL_PATH = BASE_DIR + '/predictormodel/models/english-20-model.h5'
-ENGLISH_TOKENIZER_PATH = BASE_DIR + '/predictormodel/tokenizers/english-20-tokenizer.pkl'
+ENGLISH_MODEL_PATH = BASE_DIR + '/predictormodel/models/dage-english-2020-model.h5'
+ENGLISH_TOKENIZER_PATH = BASE_DIR + '/predictormodel/tokenizers/dage-english-2020-tokenizer.pkl'
 
 CHINESE_MODEL_PATH = BASE_DIR + '/predictormodel/models/chinese-20-model.h5'
 CHINESE_TOKENIZER_PATH = BASE_DIR + '/predictormodel/tokenizers/chinese-20-tokenizer.pkl'
 
-MALAY_MODEL_PATH = BASE_DIR + '/predictormodel/models/malay-24-model.h5'
-MALAY_TOKENIZER_PATH = BASE_DIR + '/predictormodel/tokenizers/malay-24-tokenizer.pkl'
+MALAY_MODEL_PATH = BASE_DIR + '/predictormodel/models/dage-malay-model.h5'
+MALAY_TOKENIZER_PATH = BASE_DIR + '/predictormodel/tokenizers/dage-malay-tokenizer.pkl'
 
 MALAYSIAN_MODEL_PATH = BASE_DIR + '/predictormodel/models/malaysian-20-model.h5'
 MALAYSIAN_TOKENIZER_PATH = BASE_DIR + '/predictormodel/tokenizers/malaysian-20-tokenizer.pkl'
@@ -63,7 +63,7 @@ print('\tDONE.')
 model = NextWordModel()
 model.load_model_and_tokenizer(tokenizer, ENGLISH_MODEL_PATH)
 
-seq_length = {'EN': 19, 'CN': 19, 'MY': 19, 'ML': 23}
+seq_length = {'EN': 19, 'CN': 19, 'MY': 19, 'ML': 20}
 
 @api_view(['GET', 'POST'])
 def predict(request):
